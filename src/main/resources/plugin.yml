@@ -1,0 +1,9 @@
+name: CNTrans
+main: me.arasple.mc.cntrans.CNTrans
+
+author: Arasple
+
+version: ${project.version}
+api-version: 1.13
+
+description: 让你的中文服务器同时支持繁体、简体两种语言

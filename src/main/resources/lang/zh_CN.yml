@@ -1,0 +1,39 @@
+NOTIFY-ZHCN:
+  - ==: SOUND
+    sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+  - ==: JSON
+    text:
+      - ''
+      - '&3&l您的客户端语言为 &e&l简体中文 &3&l, 是否将修改服务器的显示语言?'
+      - ''
+      - '&r          &8&l[&a&l确认&8&l]'
+      - ''
+    args:
+      0:
+
+
+NOTIFY-ZHTW:
+  - ==: SOUND
+    sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+  - ==: JSON
+    text:
+      - ''
+      - '&2&l您的客戶端語言為 &6&l繁體中文 &2&l, 是否將修改服務器的顯示語言?'
+      - ''
+      - '&r          &8&l[&a&l確認&8&l]'
+      - ''
+
+CN-CHANGED:
+  ZHCN:
+    - ==: SOUND
+      sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+    - ==: TITLE
+      title: '&e&l简体中文'
+      subtitle: '&b&lSimplified Chinese'
+  ZHTW:
+    - ==: SOUND
+      sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+    - ==: TITLE
+      title: '&6&l繁體中文'
+      subtitle: '&3&lTraditional Chinese'
+  SWITCHED: '&7你已经切换到这个语言了...'

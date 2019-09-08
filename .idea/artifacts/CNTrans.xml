@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CNTrans">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="CNTrans.jar">
+      <element id="module-output" name="CNTrans" />
+    </root>
+  </artifact>
+</component>
