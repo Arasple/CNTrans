@@ -25,8 +25,7 @@ public class CNTransListener implements Listener {
         TPacketHandler.addListener(CNTrans.getPlugin(), new TPacketListener() {
             @Override
             public boolean onSend(Player player, Object packet) {
-                PacketProcessor.getPacketProcessor().process(player, packet);
-                return true;
+                return PacketProcessor.getPacketProcessor().process(player, packet);
             }
         });
     }

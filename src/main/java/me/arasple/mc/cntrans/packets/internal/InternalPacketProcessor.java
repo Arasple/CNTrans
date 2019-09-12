@@ -4,13 +4,9 @@ import com.google.common.collect.Lists;
 import com.luhuiguo.chinese.ChineseUtils;
 import io.izzel.taboolib.module.db.local.LocalPlayer;
 import io.izzel.taboolib.module.lite.SimpleReflection;
-import io.izzel.taboolib.util.Strings;
 import me.arasple.mc.cntrans.CNTrans;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,19 +22,23 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
     static {
         SimpleReflection.saveField(PacketPlayOutChat.class);
         SimpleReflection.saveField(PacketPlayOutTitle.class);
-        SimpleReflection.saveField(PacketPlayOutScoreboardDisplayObjective.class);
+        SimpleReflection.saveField(PacketPlayOutScoreboardObjective.class);
         SimpleReflection.saveField(PacketPlayOutWindowItems.class);
         SimpleReflection.saveField(PacketPlayOutPlayerListHeaderFooter.class);
         SimpleReflection.saveField(PacketPlayOutSetSlot.class);
     }
 
     @Override
-    public void process(Player player, Object packet) {
+    public boolean process(Player player, Object packet) {
+        if (packet == null) {
+            return true;
+        }
+
         String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn");
         String locale = LocalPlayer.get(player).getString("CNTrans.LOCALE", serverLocale);
 
         if (locale.equals(serverLocale)) {
-            return;
+            return true;
         }
 
         // 聊天框处理
@@ -49,10 +49,14 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
                 String raw = IChatBaseComponent.ChatSerializer.a(ic);
                 SimpleReflection.setFieldValue(PacketPlayOutChat.class, packet, "a", IChatBaseComponent.ChatSerializer.a(translateString(raw, locale)));
             }
-
         }
         // 容器物品处理
-        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.ITEM", true)) {
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.ITEM", true) && (packet instanceof PacketPlayOutWindowItems || packet instanceof PacketPlayOutSetSlot)) {
+
+            if (CNTrans.getSettings().getBoolean("OPTIONS.GUI-ONLY") && player.getOpenInventory().getTopInventory().getLocation() != null) {
+                return true;
+            }
+
             if (packet instanceof PacketPlayOutWindowItems) {
                 List<ItemStack> items = (List<ItemStack>) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
                 items.forEach(i -> translateItemStack(i.getBukkitStack(), locale));
@@ -65,28 +69,30 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TABLIST", true) && packet instanceof PacketPlayOutPlayerListHeaderFooter) {
             IChatBaseComponent header = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header");
             IChatBaseComponent footer = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer");
-
             if (header != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(translateString(TextComponent.toLegacyText(ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(header))), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(header), locale)));
             }
             if (footer != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(translateString(TextComponent.toLegacyText(ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(footer))), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(footer), locale)));
             }
         }
         // SCOREBOARD 处理
-        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardDisplayObjective) {
-            String display = String.valueOf(SimpleReflection.getFieldValue(PacketPlayOutScoreboardDisplayObjective.class, packet, "b"));
-            if (!Strings.isEmpty(display)) {
-                SimpleReflection.setFieldValue(PacketPlayOutScoreboardDisplayObjective.class, packet, "b", translateString(display, locale));
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardObjective) {
+            if (packet instanceof PacketPlayOutScoreboardObjective) {
+                IChatBaseComponent b = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b");
+                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(b), locale)));
             }
         }
-        // TITLE / SUBTITLE 处理
+        // TITLE
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TITLE", true) && packet instanceof PacketPlayOutTitle) {
-            IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
-            if (ic != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(TextComponent.toLegacyText(ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(ic))), locale)));
+            PacketPlayOutTitle.EnumTitleAction action = (PacketPlayOutTitle.EnumTitleAction) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "a");
+            if (action == PacketPlayOutTitle.EnumTitleAction.TITLE || action == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || action == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
+                IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
+                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(ic), locale)));
             }
         }
+
+        return true;
     }
 
     private void translateItemStack(org.bukkit.inventory.ItemStack bukkitStack, String toLocale) {
@@ -95,21 +101,18 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         }
         ItemMeta meta = bukkitStack.getItemMeta();
 
-        Bukkit.getScheduler().runTaskAsynchronously(CNTrans.getPlugin(), () -> {
-            if (meta != null) {
-                if (meta.hasLore() && meta.getLore() != null && meta.getLore().size() > 0) {
-                    List<String> lores = Lists.newArrayList();
-                    meta.getLore().forEach(l -> lores.add(translateString(l, toLocale)));
-                    meta.setLore(lores);
-                }
-                if (meta.hasDisplayName()) {
-                    String tran = String.valueOf(ChatColor.RESET);
-                    tran += translateString(meta.getDisplayName(), toLocale);
-                    meta.setDisplayName(tran);
-                }
-                bukkitStack.setItemMeta(meta);
+        if (meta != null) {
+            if (meta.hasLore() && meta.getLore() != null && meta.getLore().size() > 0) {
+                List<String> lores = Lists.newArrayList();
+                meta.getLore().forEach(l -> lores.add(translateString(l, toLocale)));
+                meta.setLore(lores);
             }
-        });
+            if (meta.hasDisplayName()) {
+                String tran = translateString(meta.getDisplayName(), toLocale);
+                meta.setDisplayName(meta.getDisplayName().charAt(0) != ChatColor.COLOR_CHAR ? ChatColor.RESET + tran : tran);
+            }
+            bukkitStack.setItemMeta(meta);
+        }
     }
 
     private static String translateString(String string, String toLocale) {

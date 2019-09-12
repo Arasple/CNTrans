@@ -22,3 +22,9 @@ TRANSLATIONS:
   TABLIST: true
   # 记分板
   SCOREBOARD: true
+
+# 部分选项
+OPTIONS:
+  # 是否只翻译系统菜单GUI中的物品？
+  # 启用此项可减少翻译量, 但将不会翻译玩家背包里的物品
+  GUI-ONLY: true

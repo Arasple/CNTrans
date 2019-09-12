@@ -14,6 +14,6 @@ public interface AbstractPacketProcessor {
      * @param player 玩家
      * @param packet 包
      */
-    void process(Player player, Object packet);
+    boolean process(Player player, Object packet);
 
 }

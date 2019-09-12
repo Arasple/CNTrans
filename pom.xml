@@ -6,12 +6,12 @@
 
     <groupId>me.arasple.mc</groupId>
     <artifactId>CNTrans</artifactId>
-    <version>1.0-BETA</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>CNTrans</name>
 
-    <description>让你的中文服务器同时支持繁体、简体两种语言</description>
+    <description>简繁中文互译, 服务器多语言</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

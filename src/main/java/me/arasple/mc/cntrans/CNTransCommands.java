@@ -34,6 +34,7 @@ public class CNTransCommands extends BaseMainCommand {
                         }
                     }
                 })
+                .permission("cntrans.use")
                 .build();
         CommandBuilder.create("zh_TW", CNTrans.getPlugin())
                 .execute((sender, args) -> {
@@ -46,6 +47,7 @@ public class CNTransCommands extends BaseMainCommand {
                         }
                     }
                 })
+                .permission("cntrans.use")
                 .build();
     }
 
@@ -59,6 +61,17 @@ public class CNTransCommands extends BaseMainCommand {
         if (!(sender instanceof Player)) {
             TLocale.sendTo(sender, "COMMANDS.NOT-PLAYER");
             return true;
+        }
+        if (args.length >= 1) {
+            if ("switch".equals(args[0].toLowerCase())) {
+                if (LocalPlayer.get((Player) sender).get("CNTrans.LOCALE", "zh_cn") == "zh_tw") {
+                    LocalPlayer.get((Player) sender).set("CNTrans.LOCALE", "zh_cn");
+                    TLocale.sendTo(sender, "COMMANDS.ZHCN");
+                } else {
+                    LocalPlayer.get((Player) sender).set("CNTrans.LOCALE", "zh_tw");
+                    TLocale.sendTo(sender, "COMMANDS.ZHTW");
+                }
+            }
         }
         return true;
     }
