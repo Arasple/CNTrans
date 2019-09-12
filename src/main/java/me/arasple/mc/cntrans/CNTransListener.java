@@ -39,9 +39,9 @@ public class CNTransListener implements Listener {
 
         LocalPlayer.get(p).set("CNTrans.CLIENT-LOCALE", locale);
         if ("zh_cn".equalsIgnoreCase(locale) && !"zh_cn".equalsIgnoreCase(selectedLocale)) {
-            TLocale.sendTo(p, "NOTIFY-ZHCN");
+            TLocale.sendTo(p, "NOTIFIES.ZHCN");
         } else if ("zh_tw".equalsIgnoreCase(locale) && !"zh_tw".equalsIgnoreCase(selectedLocale)) {
-            TLocale.sendTo(p, "NOTIFY-ZHTW");
+            TLocale.sendTo(p, "NOTIFIES.ZHTW");
         }
     }
 
@@ -53,7 +53,7 @@ public class CNTransListener implements Listener {
             LocalPlayer.get(p).set("CNTrans.CLIENT-LOCALE", p.getLocale());
         }
         if (!LocalPlayer.get(p).isSet("CNTrans.LOCALE")) {
-            LocalPlayer.get(p).set("CNTrans.LOCALE", "zh_cn".equalsIgnoreCase(CNTrans.getCfg().getString("SERVER-LANGUAGE", "zh_cn")) ? "zh_cn" : "zh_tw");
+            LocalPlayer.get(p).set("CNTrans.LOCALE", "zh_cn".equalsIgnoreCase(CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn")) ? "zh_cn" : "zh_tw");
         }
     }
 

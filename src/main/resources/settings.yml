@@ -1,0 +1,24 @@
+# 常规设置
+GENERAL:
+  # 是否自动检测更新? (推荐开启)
+  CHECK-UPDATE: true
+  # 你的服务器内容适用的中文类型？
+  # zh_cn = 简体中文 / zh_tw = 繁体中文
+  # 只有当玩家设定语言≠服务器语言时才会翻译包
+  SERVER-LANGUAGE: zh_cn
+
+# 当玩家切换客户端语言时，是否提醒切换服务端语言支持？
+NOTIFY: true
+
+# 翻译功能是否启用
+TRANSLATIONS:
+  # 聊天
+  CHAT: true
+  # 物品
+  ITEM: true
+  # 标题
+  TITLE: true
+  # Tablist
+  TABLIST: true
+  # 记分板
+  SCOREBOARD: true

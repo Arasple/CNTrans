@@ -1,7 +1,7 @@
 package me.arasple.mc.cntrans.packets.internal;
 
-import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.google.common.collect.Lists;
+import com.luhuiguo.chinese.ChineseUtils;
 import io.izzel.taboolib.module.db.local.LocalPlayer;
 import io.izzel.taboolib.module.lite.SimpleReflection;
 import io.izzel.taboolib.util.Strings;
@@ -34,7 +34,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
 
     @Override
     public void process(Player player, Object packet) {
-        String serverLocale = CNTrans.getCfg().getString("SERVER-LANGUAGE", "zh_cn");
+        String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn");
         String locale = LocalPlayer.get(player).getString("CNTrans.LOCALE", serverLocale);
 
         if (locale.equals(serverLocale)) {
@@ -42,7 +42,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         }
 
         // 聊天框处理
-        if (CNTrans.getCfg().getBoolean("TRANSLATIONS.CHAT", true) && packet instanceof PacketPlayOutChat) {
+        if (CNTrans.getSettings().getBoolean("TRANSLATIONS.CHAT", true) && packet instanceof PacketPlayOutChat) {
             IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "a");
             ChatMessageType type = (ChatMessageType) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "b");
             if (ic != null) {
@@ -52,7 +52,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
 
         }
         // 容器物品处理
-        else if (CNTrans.getCfg().getBoolean("TRANSLATIONS.ITEM", true)) {
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.ITEM", true)) {
             if (packet instanceof PacketPlayOutWindowItems) {
                 List<ItemStack> items = (List<ItemStack>) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
                 items.forEach(i -> translateItemStack(i.getBukkitStack(), locale));
@@ -62,7 +62,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             }
         }
         // TABLIST 处理
-        else if (CNTrans.getCfg().getBoolean("TRANSLATIONS.TABLIST", true) && packet instanceof PacketPlayOutPlayerListHeaderFooter) {
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TABLIST", true) && packet instanceof PacketPlayOutPlayerListHeaderFooter) {
             IChatBaseComponent header = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header");
             IChatBaseComponent footer = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer");
 
@@ -74,14 +74,14 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             }
         }
         // SCOREBOARD 处理
-        else if (CNTrans.getCfg().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardDisplayObjective) {
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardDisplayObjective) {
             String display = String.valueOf(SimpleReflection.getFieldValue(PacketPlayOutScoreboardDisplayObjective.class, packet, "b"));
             if (!Strings.isEmpty(display)) {
                 SimpleReflection.setFieldValue(PacketPlayOutScoreboardDisplayObjective.class, packet, "b", translateString(display, locale));
             }
         }
         // TITLE / SUBTITLE 处理
-        else if (CNTrans.getCfg().getBoolean("TRANSLATIONS.TITLE", true) && packet instanceof PacketPlayOutTitle) {
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TITLE", true) && packet instanceof PacketPlayOutTitle) {
             IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
             if (ic != null) {
                 SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(TextComponent.toLegacyText(ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(ic))), locale)));
@@ -113,7 +113,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
     }
 
     private static String translateString(String string, String toLocale) {
-        return "zh_cn".equals(toLocale) ? ZhConverterUtil.convertToSimple(string) : ZhConverterUtil.convertToTraditional(string);
+        return "zh_cn".equals(toLocale) ? ChineseUtils.toSimplified(string) : ChineseUtils.toTraditional(string);
     }
 
 }

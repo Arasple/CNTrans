@@ -236,7 +236,7 @@ public abstract class CNTransPlugin extends JavaPlugin {
         return null;
     }
 
-    private static String readFully(InputStream inputStream, Charset charset) throws IOException {
+    public static String readFully(InputStream inputStream, Charset charset) throws IOException {
         return new String(readFully(inputStream), charset);
     }
 

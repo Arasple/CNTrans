@@ -1,29 +1,28 @@
-NOTIFY-ZHCN:
-  - ==: SOUND
-    sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
-  - ==: JSON
-    text:
+PLUGIN:
+  ENABLED:
+    - '&8[&6CN&eTrans&8] &3启动成功. 当前运行版本: &aVersion {0}'
+  DISABLED:
+    - '&8[&6CN&eTrans&8] &7感谢使用本插件, 您在论坛为本插件评分即是对作者最大的鼓励!'
+  COMMAND-TITLE: '&6「&8&m--------------------------------------------------&6」'
+  UPDATE-NOTIFY:
+    LATEST: '&8[&6CN&eTrans&8] &a你正在运行最新版的 &3CNTrans&a.'
+    DEV: '&8[&6CN&eTrans&8] &e你正在运行开发版本的CNTrans, 请及时反馈漏洞!'
+    HEADER:
       - ''
-      - '&3&l您的客户端语言为 &e&l简体中文 &3&l, 是否将修改服务器的显示语言?'
       - ''
-      - '&r          &8&l[&a&l确认&8&l]'
       - ''
-    args:
-      0:
+      - '&3「&8&m--------------------------------------------------&3」'
+      - '&7▪ &3CNTrans &6更新通知 &8v{0} &7➦ &av{1}'
+      - ''
+      - '&7▪ &b更新内容'
+    FOOTER:
+      - ''
+      - '&7▪ &2Github下载: &a&nhttps://github.com/Arasple/CNTrans/releases/latest'
+      - '&7▪ &2Mcbbs下载: &ahttps://www.mcbbs.net/thread-904556-1-1.html'
+      - '&3「&8&m--------------------------------------------------&3」'
 
-
-NOTIFY-ZHTW:
-  - ==: SOUND
-    sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
-  - ==: JSON
-    text:
-      - ''
-      - '&2&l您的客戶端語言為 &6&l繁體中文 &2&l, 是否將修改服務器的顯示語言?'
-      - ''
-      - '&r          &8&l[&a&l確認&8&l]'
-      - ''
-
-CN-CHANGED:
+COMMANDS:
+  NOT-PLAYER: '&8[&6CN&eTrans&8] &c你必须是一个玩家才能执行此操作.'
   ZHCN:
     - ==: SOUND
       sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
@@ -37,3 +36,27 @@ CN-CHANGED:
       title: '&6&l繁體中文'
       subtitle: '&3&lTraditional Chinese'
   SWITCHED: '&7你已经切换到这个语言了...'
+
+NOTIFIES:
+  ZHCN:
+    - ==: SOUND
+      sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+    - ==: JSON
+      text:
+        - ''
+        - '&3&l您的客户端语言为 &e&l简体中文 &3&l, 是否将修改服务器的显示语言?'
+        - ''
+        - '&r          &8&l[&a&l确认&8&l]'
+        - ''
+      args:
+        0:
+  ZHTW:
+    - ==: SOUND
+      sound: 'BLOCK_NOTE_BLOCK_PLING-1-0'
+    - ==: JSON
+      text:
+        - ''
+        - '&2&l您的客戶端語言為 &6&l繁體中文 &2&l, 是否將修改服務器的顯示語言?'
+        - ''
+        - '&r          &8&l[&a&l確認&8&l]'
+        - ''
