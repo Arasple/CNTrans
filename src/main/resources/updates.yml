@@ -1,9 +1,18 @@
+Version 1.1:
+  Date: 2019.9.13
+  Updates:
+    - 新增了一堆 bStats 统计项
+    - 新增PAPI变量
+    - 修复了不兼容1.14-版本的情况
+    - 更改客户端切换语言监听方式
+    - %cntrans_locale% = 玩家设置的CNTrans语言
+    - %cntrans_count% = 插件正在为多少名在线玩家监听翻译数据包
+
 Version 1.0:
   Date: 2019.9.12
   Updates:
     - 正式版本
     - 新增更新检测
-    - 新增更多bStats统计
     - 更换依赖库
     - 重写配置语言文件格式
 

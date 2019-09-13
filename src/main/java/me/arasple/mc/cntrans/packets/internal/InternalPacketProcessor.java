@@ -8,9 +8,11 @@ import me.arasple.mc.cntrans.CNTrans;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +46,6 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         // 聊天框处理
         if (CNTrans.getSettings().getBoolean("TRANSLATIONS.CHAT", true) && packet instanceof PacketPlayOutChat) {
             IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "a");
-            ChatMessageType type = (ChatMessageType) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "b");
             if (ic != null) {
                 String raw = IChatBaseComponent.ChatSerializer.a(ic);
                 SimpleReflection.setFieldValue(PacketPlayOutChat.class, packet, "a", IChatBaseComponent.ChatSerializer.a(translateString(raw, locale)));
@@ -58,11 +59,18 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             }
 
             if (packet instanceof PacketPlayOutWindowItems) {
-                List<ItemStack> items = (List<ItemStack>) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
-                items.forEach(i -> translateItemStack(i.getBukkitStack(), locale));
+                List<ItemStack> items;
+
+                try {
+                    items = (List<ItemStack>) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
+                } catch (ClassCastException e) {
+                    items = Arrays.asList((ItemStack[]) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b"));
+                }
+
+                items.forEach(i -> translateItemStack(CraftItemStack.asCraftMirror(i), locale));
             } else if (packet instanceof PacketPlayOutSetSlot) {
                 ItemStack itemStack = (ItemStack) SimpleReflection.getFieldValue(PacketPlayOutSetSlot.class, packet, "c");
-                translateItemStack(itemStack.getBukkitStack(), locale);
+                translateItemStack(CraftItemStack.asCraftMirror(itemStack), locale);
             }
         }
         // TABLIST 处理
@@ -86,7 +94,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         // TITLE
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TITLE", true) && packet instanceof PacketPlayOutTitle) {
             PacketPlayOutTitle.EnumTitleAction action = (PacketPlayOutTitle.EnumTitleAction) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "a");
-            if (action == PacketPlayOutTitle.EnumTitleAction.TITLE || action == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || action == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
+            if (action != PacketPlayOutTitle.EnumTitleAction.TIMES && action != PacketPlayOutTitle.EnumTitleAction.RESET && action != PacketPlayOutTitle.EnumTitleAction.CLEAR) {
                 IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
                 SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(ic), locale)));
             }

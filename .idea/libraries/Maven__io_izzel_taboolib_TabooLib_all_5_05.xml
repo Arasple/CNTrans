@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: io.izzel.taboolib:TabooLib:all:5.05">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/izzel/taboolib/TabooLib/5.05/TabooLib-5.05-all.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/io/izzel/taboolib/TabooLib/5.05/TabooLib-5.05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/izzel/taboolib/TabooLib/5.05/TabooLib-5.05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
