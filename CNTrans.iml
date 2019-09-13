@@ -35,11 +35,20 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Libraries/MC Server Core/Paper/Paper1.14.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../Libraries/MC Server Core/NMS v1_8_R1 - v1_14_R1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../Libraries/MC Server Core/Paper/Paper1.12.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../Libraries/MC Server Core/Paper/Paper1.14.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../Libraries/MC Server Core/Paper/Paper1.12.2.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

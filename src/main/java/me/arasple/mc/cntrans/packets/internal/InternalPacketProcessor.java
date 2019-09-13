@@ -1,16 +1,12 @@
 package me.arasple.mc.cntrans.packets.internal;
 
-import com.google.common.collect.Lists;
-import com.luhuiguo.chinese.ChineseUtils;
 import io.izzel.taboolib.module.db.local.LocalPlayer;
 import io.izzel.taboolib.module.lite.SimpleReflection;
 import me.arasple.mc.cntrans.CNTrans;
-import net.md_5.bungee.api.ChatColor;
+import me.arasple.mc.cntrans.utils.Translator;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +44,7 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "a");
             if (ic != null) {
                 String raw = IChatBaseComponent.ChatSerializer.a(ic);
-                SimpleReflection.setFieldValue(PacketPlayOutChat.class, packet, "a", IChatBaseComponent.ChatSerializer.a(translateString(raw, locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutChat.class, packet, "a", IChatBaseComponent.ChatSerializer.a(Translator.translateString(raw, locale)));
             }
         }
         // 容器物品处理
@@ -67,10 +63,10 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
                     items = Arrays.asList((ItemStack[]) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b"));
                 }
 
-                items.forEach(i -> translateItemStack(CraftItemStack.asCraftMirror(i), locale));
+                items.forEach(i -> Translator.translateItemStack(CraftItemStack.asCraftMirror(i), locale));
             } else if (packet instanceof PacketPlayOutSetSlot) {
                 ItemStack itemStack = (ItemStack) SimpleReflection.getFieldValue(PacketPlayOutSetSlot.class, packet, "c");
-                translateItemStack(CraftItemStack.asCraftMirror(itemStack), locale);
+                Translator.translateItemStack(CraftItemStack.asCraftMirror(itemStack), locale);
             }
         }
         // TABLIST 处理
@@ -78,17 +74,17 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             IChatBaseComponent header = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header");
             IChatBaseComponent footer = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer");
             if (header != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(header), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(header), locale)));
             }
             if (footer != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(footer), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(footer), locale)));
             }
         }
         // SCOREBOARD 处理
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardObjective) {
             if (packet instanceof PacketPlayOutScoreboardObjective) {
                 IChatBaseComponent b = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b");
-                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(b), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(b), locale)));
             }
         }
         // TITLE
@@ -96,35 +92,11 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             PacketPlayOutTitle.EnumTitleAction action = (PacketPlayOutTitle.EnumTitleAction) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "a");
             if (action != PacketPlayOutTitle.EnumTitleAction.TIMES && action != PacketPlayOutTitle.EnumTitleAction.RESET && action != PacketPlayOutTitle.EnumTitleAction.CLEAR) {
                 IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
-                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(translateString(IChatBaseComponent.ChatSerializer.a(ic), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(ic), locale)));
             }
         }
 
         return true;
-    }
-
-    private void translateItemStack(org.bukkit.inventory.ItemStack bukkitStack, String toLocale) {
-        if (bukkitStack == null || bukkitStack.getType() == Material.AIR) {
-            return;
-        }
-        ItemMeta meta = bukkitStack.getItemMeta();
-
-        if (meta != null) {
-            if (meta.hasLore() && meta.getLore() != null && meta.getLore().size() > 0) {
-                List<String> lores = Lists.newArrayList();
-                meta.getLore().forEach(l -> lores.add(translateString(l, toLocale)));
-                meta.setLore(lores);
-            }
-            if (meta.hasDisplayName()) {
-                String tran = translateString(meta.getDisplayName(), toLocale);
-                meta.setDisplayName(meta.getDisplayName().charAt(0) != ChatColor.COLOR_CHAR ? ChatColor.RESET + tran : tran);
-            }
-            bukkitStack.setItemMeta(meta);
-        }
-    }
-
-    private static String translateString(String string, String toLocale) {
-        return "zh_cn".equals(toLocale) ? ChineseUtils.toSimplified(string) : ChineseUtils.toTraditional(string);
     }
 
 }
