@@ -41,9 +41,9 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
 
         // 聊天框处理
         if (CNTrans.getSettings().getBoolean("TRANSLATIONS.CHAT", true) && packet instanceof PacketPlayOutChat) {
-            IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "a");
+            Object ic = SimpleReflection.getFieldValue(PacketPlayOutChat.class, packet, "a");
             if (ic != null) {
-                String raw = IChatBaseComponent.ChatSerializer.a(ic);
+                String raw = IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) ic);
                 SimpleReflection.setFieldValue(PacketPlayOutChat.class, packet, "a", IChatBaseComponent.ChatSerializer.a(Translator.translateString(raw, locale)));
             }
         }
@@ -71,28 +71,28 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         }
         // TABLIST 处理
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TABLIST", true) && packet instanceof PacketPlayOutPlayerListHeaderFooter) {
-            IChatBaseComponent header = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header");
-            IChatBaseComponent footer = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer");
+            Object header = SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header");
+            Object footer = SimpleReflection.getFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer");
             if (header != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(header), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "header", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) header), locale)));
             }
             if (footer != null) {
-                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(footer), locale)));
+                SimpleReflection.setFieldValue(PacketPlayOutPlayerListHeaderFooter.class, packet, "footer", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) header), locale)));
             }
         }
         // SCOREBOARD 处理
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardObjective) {
             if (packet instanceof PacketPlayOutScoreboardObjective) {
-                IChatBaseComponent b = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b");
-                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(b), locale)));
+                Object b = SimpleReflection.getFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b");
+                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) b), locale)));
             }
         }
         // TITLE
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.TITLE", true) && packet instanceof PacketPlayOutTitle) {
             PacketPlayOutTitle.EnumTitleAction action = (PacketPlayOutTitle.EnumTitleAction) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "a");
             if (action != PacketPlayOutTitle.EnumTitleAction.TIMES && action != PacketPlayOutTitle.EnumTitleAction.RESET && action != PacketPlayOutTitle.EnumTitleAction.CLEAR) {
-                IChatBaseComponent ic = (IChatBaseComponent) SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
-                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a(ic), locale)));
+                Object ic = SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
+                SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) ic), locale)));
             }
         }
 
