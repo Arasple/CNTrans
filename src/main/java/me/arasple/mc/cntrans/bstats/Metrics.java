@@ -3,6 +3,7 @@ package me.arasple.mc.cntrans.bstats;
 import io.izzel.taboolib.module.db.local.LocalPlayer;
 import io.izzel.taboolib.module.inject.TSchedule;
 import me.arasple.mc.cntrans.CNTrans;
+import me.arasple.mc.cntrans.utils.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.util.NumberConversions;
 
@@ -40,7 +41,10 @@ public class Metrics {
 
             return !serverLocale.equals(locale);
         }).count())));
+        // 翻译了多少次
+        metrics.addCustomChart(new MetricsBukkit.SingleLineChart("translation_counts", Translator::getAndRestCount));
     }
+
 
     public static MetricsBukkit getMetrics() {
         return metrics;

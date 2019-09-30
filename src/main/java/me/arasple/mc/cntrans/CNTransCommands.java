@@ -71,6 +71,8 @@ public class CNTransCommands extends BaseMainCommand {
                     LocalPlayer.get((Player) sender).set("CNTrans.LOCALE", "zh_tw");
                     TLocale.sendTo(sender, "COMMANDS.ZHTW");
                 }
+            } else if ("options".equals(args[0].toLowerCase())) {
+//                TranslateOptionsMenu.openFor((Player) sender);
             }
         }
         return true;

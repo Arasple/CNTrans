@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class Translator {
 
+    private static int count = 0;
+
     public static void translateItemStack(ItemStack bukkitStack, String toLocale) {
         if (bukkitStack == null || bukkitStack.getType() == Material.AIR) {
             return;
@@ -36,7 +38,14 @@ public class Translator {
     }
 
     public static String translateString(String string, String toLocale) {
+        count++;
         return "zh_cn".equals(toLocale) ? ChineseUtils.toSimplified(string) : ChineseUtils.toTraditional(string);
+    }
+
+    public static int getAndRestCount() {
+        int num = count;
+        count = 0;
+        return num;
     }
 
 }

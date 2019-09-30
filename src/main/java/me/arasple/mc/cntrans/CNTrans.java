@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 /**
  * @author Arasple
  */
-@CNTransPlugin.Version(5.05)
+@CNTransPlugin.Version(5.06)
 @Dependency(maven = "com.luhuiguo:chinese-utils:1.0")
 public final class CNTrans extends CNTransPlugin implements Listener {
 

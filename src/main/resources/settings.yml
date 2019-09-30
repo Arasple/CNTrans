@@ -11,6 +11,7 @@ GENERAL:
 NOTIFY: true
 
 # 翻译功能是否启用
+# 启用的项玩家也可通过一个GUI自由开关切换
 TRANSLATIONS:
   # 聊天
   CHAT: true
