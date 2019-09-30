@@ -1,6 +1,8 @@
 package me.arasple.mc.cntrans.packets;
 
-import io.izzel.taboolib.module.inject.TInject;
+import io.izzel.taboolib.module.inject.TSchedule;
+import io.izzel.taboolib.module.lite.SimpleVersionControl;
+import me.arasple.mc.cntrans.CNTrans;
 import me.arasple.mc.cntrans.packets.internal.AbstractPacketProcessor;
 
 /**
@@ -9,8 +11,16 @@ import me.arasple.mc.cntrans.packets.internal.AbstractPacketProcessor;
  */
 public class PacketProcessor {
 
-    @TInject(asm = "me.arasple.mc.cntrans.packets.internal.InternalPacketProcessor")
     private static AbstractPacketProcessor packetProcessor;
+
+    @TSchedule
+    public static void init() {
+        try {
+            packetProcessor = (AbstractPacketProcessor) SimpleVersionControl.createNMS("me.arasple.mc.cntrans.packets.internal.InternalPacketProcessor").mapping().translate(CNTrans.getPlugin()).newInstance();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
     public static AbstractPacketProcessor getPacketProcessor() {
         return packetProcessor;

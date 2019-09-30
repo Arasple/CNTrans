@@ -55,18 +55,19 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
             }
 
             if (packet instanceof PacketPlayOutWindowItems) {
-                List<ItemStack> items;
-
+                Object items = SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
                 try {
-                    items = (List<ItemStack>) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b");
-                } catch (ClassCastException e) {
-                    items = Arrays.asList((ItemStack[]) SimpleReflection.getFieldValue(PacketPlayOutWindowItems.class, packet, "b"));
+                    ((List<ItemStack>) items).forEach(i -> Translator.translateItemStack(CraftItemStack.asCraftMirror(i), locale));
+                } catch (Throwable e) {
+                    try {
+                        ((NonNullList) items).forEach(i -> Translator.translateItemStack(CraftItemStack.asCraftMirror((ItemStack) i), locale));
+                    } catch (Throwable e2) {
+                        Arrays.asList((ItemStack[]) items).forEach(i -> Translator.translateItemStack(CraftItemStack.asCraftMirror(i), locale));
+                    }
                 }
-
-                items.forEach(i -> Translator.translateItemStack(CraftItemStack.asCraftMirror(i), locale));
             } else if (packet instanceof PacketPlayOutSetSlot) {
-                ItemStack itemStack = (ItemStack) SimpleReflection.getFieldValue(PacketPlayOutSetSlot.class, packet, "c");
-                Translator.translateItemStack(CraftItemStack.asCraftMirror(itemStack), locale);
+                Object itemStack = SimpleReflection.getFieldValue(PacketPlayOutSetSlot.class, packet, "c");
+                Translator.translateItemStack(CraftItemStack.asCraftMirror((ItemStack) itemStack), locale);
             }
         }
         // TABLIST 处理
