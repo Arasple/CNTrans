@@ -34,6 +34,8 @@ public class Metrics {
         metrics.addCustomChart(new MetricsBukkit.SimplePie("translate_tablist", () -> CNTrans.getSettings().getBoolean("TRANSLATIONS.TABLIST", true) ? "Enabled" : "Disabled"));
         // 翻译 - 记分板
         metrics.addCustomChart(new MetricsBukkit.SimplePie("translate_gui_only", () -> CNTrans.getSettings().getBoolean("OPTIONS.GUI-ONLY", true) ? "Enabled" : "Disabled"));
+        // 翻译 - 木牌
+        metrics.addCustomChart(new MetricsBukkit.SimplePie("translate_sign", () -> CNTrans.getSettings().getBoolean("TRANSLATIONS.SIGN", true) ? "Enabled" : "Disabled"));
         // 为多少名在线玩家提供翻译中
         metrics.addCustomChart(new MetricsBukkit.SingleLineChart("players_using_translator", () -> NumberConversions.toInt(Bukkit.getOnlinePlayers().stream().filter(p -> {
             String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn");

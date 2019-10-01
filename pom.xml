@@ -6,7 +6,7 @@
 
     <groupId>me.arasple.mc</groupId>
     <artifactId>CNTrans</artifactId>
-    <version>1.21</version>
+    <version>1.22</version>
     <packaging>jar</packaging>
 
     <name>CNTrans</name>

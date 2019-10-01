@@ -85,7 +85,11 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
         else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SCOREBOARD", true) && packet instanceof PacketPlayOutScoreboardObjective) {
             if (packet instanceof PacketPlayOutScoreboardObjective) {
                 Object b = SimpleReflection.getFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b");
-                SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) b), locale)));
+                try {
+                    SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) b), locale)));
+                } catch (ClassCastException e) {
+                    SimpleReflection.setFieldValue(PacketPlayOutScoreboardObjective.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(String.valueOf(b), locale)));
+                }
             }
         }
         // TITLE
@@ -95,6 +99,9 @@ public class InternalPacketProcessor implements AbstractPacketProcessor {
                 Object ic = SimpleReflection.getFieldValue(PacketPlayOutTitle.class, packet, "b");
                 SimpleReflection.setFieldValue(PacketPlayOutTitle.class, packet, "b", IChatBaseComponent.ChatSerializer.a(Translator.translateString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) ic), locale)));
             }
+        }
+        // SIGNS
+        else if (CNTrans.getSettings().getBoolean("TRANSLATIONS.SIGN", true)) {
         }
 
         return true;

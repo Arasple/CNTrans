@@ -23,6 +23,8 @@ TRANSLATIONS:
   TABLIST: true
   # 记分板
   SCOREBOARD: true
+  # 木牌
+  SIGN: true
 
 # 部分选项
 OPTIONS:
