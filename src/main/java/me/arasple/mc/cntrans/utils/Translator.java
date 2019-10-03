@@ -2,6 +2,7 @@ package me.arasple.mc.cntrans.utils;
 
 import com.google.common.collect.Lists;
 import com.luhuiguo.chinese.ChineseUtils;
+import me.arasple.mc.cntrans.CNTrans;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,8 +40,24 @@ public class Translator {
 
     public static String translateString(String string, String toLocale) {
         count++;
-        return "zh_cn".equals(toLocale) ? ChineseUtils.toSimplified(string) : ChineseUtils.toTraditional(string);
+        return "zh_cn".equals(toLocale) ? toSimplified(string) : toTraditional(string);
     }
+
+    private static String toSimplified(String string) {
+        for (String key : CNTrans.getTranslations().getConfigurationSection(serverLocale).getKeys(false)) {
+            string = string.replace(key, CNTrans.getTranslations().getString(serverLocale + "." + key));
+        }
+        return ChineseUtils.toSimplified(string);
+    }
+
+    private static String toTraditional(String string) {
+        for (String key : CNTrans.getTranslations().getConfigurationSection(serverLocale).getKeys(false)) {
+            string = string.replace(key, CNTrans.getTranslations().getString(serverLocale + "." + key));
+        }
+        return ChineseUtils.toTraditional(string);
+    }
+
+    private static String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn");
 
     public static int getAndRestCount() {
         int num = count;

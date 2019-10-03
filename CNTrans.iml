@@ -31,8 +31,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="TabooLib" level="application" />
-    <orderEntry type="library" name="Maven: io.izzel.taboolib:TabooLib:all:5.05" level="project" />
-    <orderEntry type="library" name="Maven: com.luhuiguo:chinese-utils:1.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -44,5 +42,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: io.izzel.taboolib:TabooLib:all:5.05" level="project" />
+    <orderEntry type="library" name="Maven: com.luhuiguo:chinese-utils:1.0" level="project" />
   </component>
 </module>

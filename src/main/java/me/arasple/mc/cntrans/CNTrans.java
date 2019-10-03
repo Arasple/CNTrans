@@ -17,6 +17,8 @@ public final class CNTrans extends CNTransPlugin implements Listener {
 
     @TInject("settings.yml")
     private static TConfig settings;
+    @TInject("translations.yml")
+    private static TConfig translations;
     @TInject("§6CN§eTrans")
     private static TLogger logger;
 
@@ -37,6 +39,10 @@ public final class CNTrans extends CNTransPlugin implements Listener {
 
     public static TConfig getSettings() {
         return settings;
+    }
+
+    public static TConfig getTranslations() {
+        return translations;
     }
 
 }
