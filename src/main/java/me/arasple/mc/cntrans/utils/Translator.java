@@ -57,7 +57,7 @@ public class Translator {
         return ChineseUtils.toTraditional(string);
     }
 
-    private static String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "zh_cn");
+    private static String serverLocale = CNTrans.getSettings().getString("GENERAL.SERVER-LANGUAGE", "ZH_CN").toUpperCase();
 
     public static int getAndRestCount() {
         int num = count;
