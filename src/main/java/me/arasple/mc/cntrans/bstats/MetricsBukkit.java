@@ -83,7 +83,7 @@ public class MetricsBukkit {
 
         // Get the config file
         File bStatsFolder = new File(plugin.getDataFolder().getParentFile(), "bStats");
-        File configFile = new File(bStatsFolder, "settings.yml");
+        File configFile = new File(bStatsFolder, "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         // Check if the config file exists
